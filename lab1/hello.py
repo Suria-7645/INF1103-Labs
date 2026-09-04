@@ -35,4 +35,6 @@ print("Username: " + username)
 print("Age: " ,age)
 print("Category: " + category)
 
+if age>15 and category == "football":
+    print("Cristiano is the greatest footballer of all time!")
 
