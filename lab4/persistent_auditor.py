@@ -1,4 +1,5 @@
 ORDERS_FILE = "orders.txt"
+STARTING_ID = 1001
 
 
 def load_inventory():
@@ -11,10 +12,10 @@ def load_inventory():
                     continue
                 parts = [part.strip() for part in line.split(",")]
                 if len(parts) != 3 or not parts[0].isdigit() or not parts[2].isdigit():
-                    continue  # skip malformed lines instead of crashing
+                    continue
                 orders.append([int(parts[0]), parts[1], int(parts[2])])
     except FileNotFoundError:
-        pass  # no file yet: start with an empty inventory
+        pass
     return orders
 
 
@@ -54,6 +55,12 @@ def get_valid_quantity():
     return int(user_input)
 
 
+def next_order_id(orders):
+    if not orders:
+        return STARTING_ID
+    return max(order[0] for order in orders) + 1
+
+
 def process_delivery(current_total, new_value):
     return current_total + new_value
 
@@ -88,16 +95,20 @@ def main():
             failed_entries += 1
             continue
 
+        new_order = [next_order_id(orders), product, quantity]
+        orders.append(new_order)
         total_inventory = process_delivery(total_inventory, quantity)
         orders_added += 1
 
-        print(f"\nAccepted: {product}, {quantity}")
-        print(f"Running total inventory: {total_inventory}\n")
+        print("\nNew Order Added:")
+        print(f"{new_order[0]},{new_order[1]},{new_order[2]}\n")
 
         if total_inventory > 500:
             print("ALERT: Overstock! Total inventory has exceeded 500 units.")
             break
 
+    print()
+    display_orders(orders)
     generate_report(orders_added, failed_entries)
 
 
