@@ -19,6 +19,13 @@ def load_inventory():
     return orders
 
 
+def save_inventory(orders):
+    with open(ORDERS_FILE, "w") as file:
+        for order_id, product, quantity in orders:
+            file.write(f"{order_id},{product},{quantity}\n")
+    print(f"Order successfully saved to {ORDERS_FILE}")
+
+
 def display_orders(orders):
     print("Current Orders:\n")
     if not orders:
@@ -102,13 +109,13 @@ def main():
 
         print("\nNew Order Added:")
         print(f"{new_order[0]},{new_order[1]},{new_order[2]}\n")
+        save_inventory(orders)
+        print()
 
         if total_inventory > 500:
             print("ALERT: Overstock! Total inventory has exceeded 500 units.")
             break
 
-    print()
-    display_orders(orders)
     generate_report(orders_added, failed_entries)
 
 
