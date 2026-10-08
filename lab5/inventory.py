@@ -1,4 +1,4 @@
-# PHASE B: load_inventory() added, products now come from inventory.json
+# PHASE C: save_inventory() added (menu option 5 and automatic save on exit)
 import json
 import os
 
@@ -19,6 +19,12 @@ def load_inventory():
     else:
         print(f"{FILENAME} not found. Starting with empty inventory.")
     return []
+
+
+def save_inventory(inventory):
+    """Save inventory (including transaction history) to file."""
+    with open(FILENAME, "w") as f:
+        json.dump(inventory, f, indent=4)
 
 
 def find_product(inventory, product_id):
@@ -122,7 +128,8 @@ def show_menu():
     print("2. Add Product")
     print("3. Update Stock")
     print("4. Search Product")
-    print("5. Exit")
+    print("5. Save Inventory")
+    print("6. Exit")
     print("----------------------------")
 
 
@@ -144,11 +151,18 @@ def main():
         elif choice == "4":
             search_product(inventory)
         elif choice == "5":
+            print("Saving inventory...")
+            save_inventory(inventory)
+            print(f"Inventory saved successfully to {FILENAME}.")
+        elif choice == "6":
+            print("Saving inventory before exit...")
+            save_inventory(inventory)
+            print("Inventory saved successfully.")
             print("Thank you for using Inventory Management System.")
             print("Program terminated.")
             break
         else:
-            print("Invalid option. Please enter 1-5.")
+            print("Invalid option. Please enter 1-6.")
 
 
 if __name__ == "__main__":
