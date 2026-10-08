@@ -1,4 +1,24 @@
-# PHASE A: products stored as dictionaries, a few products added, no file handling yet
+# PHASE B: load_inventory() added, products now come from inventory.json
+import json
+import os
+
+FILENAME = "inventory.json"
+
+
+def load_inventory():
+    """Load inventory from file if it exists, else return an empty list."""
+    if os.path.exists(FILENAME):
+        print(f"{FILENAME} found.")
+        try:
+            with open(FILENAME, "r") as f:
+                inventory = json.load(f)
+            print("Inventory loaded successfully.")
+            return inventory
+        except (json.JSONDecodeError, OSError):
+            print("Could not read file. Starting with empty inventory.")
+    else:
+        print(f"{FILENAME} not found. Starting with empty inventory.")
+    return []
 
 
 def find_product(inventory, product_id):
@@ -110,16 +130,7 @@ def main():
     print("=" * 40)
     print("INVENTORY MANAGEMENT SYSTEM")
     print("=" * 40)
-
-    # each product is a dictionary; a few are added to start with
-    inventory = [
-        {"id": "P001", "name": "Keyboard", "price": 49.90, "stock": 15,
-         "history": [{"type": "initial", "amount": 15}]},
-        {"id": "P002", "name": "Mouse", "price": 19.50, "stock": 30,
-         "history": [{"type": "initial", "amount": 30}]},
-        {"id": "P003", "name": "Monitor", "price": 229.00, "stock": 8,
-         "history": [{"type": "initial", "amount": 8}]},
-    ]
+    inventory = load_inventory()
     show_menu()
 
     while True:
